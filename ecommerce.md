@@ -76,13 +76,10 @@
     status, created_at, updated_at
 
 ### products
-    id, name, image_id, sku, price, qty, description, information
-    product_variation_id
+    id, name, slug, image_id, sku, price, qty, description, information
+    product_variation_id, tags (product_name, category_name, brand_name)
     status, created_at, updated_at
 
-### product_tags
-    id, product_id, tags (product_name, category_name, brand_name)
-    status, created_at, updated_at
 
 ### wishlists
     id, user_id, product_id
