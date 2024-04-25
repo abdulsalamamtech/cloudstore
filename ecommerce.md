@@ -22,6 +22,9 @@
     $table->foreignId('admin_id')->constrained('users','id')->cascadeOnDelete();
     // Status for active 1 as default
     $table->tinyInteger('status')->default(1);
+    // Or
+    $table->boolean('status')->default(true);
+    $table->softDeletes();
     $table->timestamps();
 
 ```
@@ -34,7 +37,7 @@
     status, created_at, updated_at
 
 ### address
-    id, first_name, last_name, email
+    id, user_id, first_name, last_name, email
     street_no, address_line1, address_line2
     zip_code (postal_code), phone_number,
     lga (city), state, country (nigeria)
@@ -45,7 +48,7 @@
     status, created_at, updated_at
 
 ### images
-    id, type, file_id, url, data, 
+    id, type, file_id, url, path, size, data, 
     status, created_at, updated_at
 
 ### brands
@@ -54,10 +57,6 @@
 
 ### categories
     id, name, image_id, parent_id, 
-    status, created_at, updated_at
-
-### product_variations (sizes: s, l, xl, xxl, color: black, white, blue weight: 10g, 20g)
-    id, size_id, color_id, weight_id
     status, created_at, updated_at
 
 ### variations_sizes (sizes: s, l, xl, xxl)
@@ -72,8 +71,13 @@
     id, weight
     status, created_at, updated_at
 
+### product_variations (sizes: s, l, xl, xxl, color: black, white, blue weight: 10g, 20g)
+    id, variation_size_id, variation_color_id, variation_weight_id
+    status, created_at, updated_at
+
 ### products
     id, name, image_id, sku, price, qty, description, information
+    product_variation_id
     status, created_at, updated_at
 
 ### product_tags
