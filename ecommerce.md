@@ -56,7 +56,7 @@
     id, name, image_id, parent_id, 
     status, created_at, updated_at
 
-### variations (sizes: s, l, xl, xxl, color: black, white, blue weight: 10g, 20g)
+### product_variations (sizes: s, l, xl, xxl, color: black, white, blue weight: 10g, 20g)
     id, size_id, color_id, weight_id
     status, created_at, updated_at
 
