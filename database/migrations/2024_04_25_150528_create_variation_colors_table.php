@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('variation_colors', function (Blueprint $table) {
             $table->id();
+            $table->string('value');
+            $table->boolean('status')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

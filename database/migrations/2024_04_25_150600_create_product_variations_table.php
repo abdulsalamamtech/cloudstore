@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('product_variations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('color_id')->constrained('variation_colors','id')->cascadeOnDelete();
-            $table->foreignId('size_is')->constrained('variation_sizes','id')->cascadeOnDelete();
-            $table->foreignId('weight_id')->constrained('variation_weights','id')->cascadeOnDelete();
+            $table->foreignId('variation_color_id')->constrained('variation_colors','id')->cascadeOnDelete();
+            $table->foreignId('variation_size_is')->constrained('variation_sizes','id')->cascadeOnDelete();
+            $table->foreignId('variation_weight_id')->constrained('variation_weights','id')->cascadeOnDelete();
             $table->string('name');
             $table->boolean('status')->default(false);
             $table->softDeletes();
