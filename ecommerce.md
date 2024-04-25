@@ -102,8 +102,8 @@
     id, name, provider (dhl, ups), 
     status, created_at, updated_at
 
-### order_status
-    id, order_status (pending, processing, shipped, clearing, delivered)
+### order_statuses
+    id, order_status (pending, cancel, processing, shipped, clearing, delivered)
     status, created_at, updated_at
 
 ### orders
@@ -120,9 +120,9 @@
     status, created_at, updated_at
 
 ### coupons
-    id, name, discount_rate start_date, end_date, 
+    id, name, description, discount_rate start_date, end_date, 
     status, created_at, updated_at
 
 ### promotions
-    id, name, description, start_date, end_date,
+    id, name, description, discount_rate, start_date, end_date,
     status, created_at, updated_at
