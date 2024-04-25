@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
+            $table->string('type');
+            $table->string('file_id');
+            $table->string('url');
+            $table->string('path');
+            $table->integer('size')->nullable();
+            $table->string('data');
+            $table->boolean('status')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->foreignId('image_id')->constrained('images','id')->cascadeOnDelete();
+            $table->foreignId('parent_id')->constrained('categories','id')->cascadeOnDelete();
+            $table->boolean('status')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

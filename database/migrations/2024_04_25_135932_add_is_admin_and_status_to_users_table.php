@@ -15,6 +15,7 @@ return new class extends Migration
             //
             $table->boolean('is_admin')->nullable()->default(false);
             $table->boolean('status')->nullable()->default(true);
+            $table->softDeletes();
         });
     }
 
@@ -27,6 +28,7 @@ return new class extends Migration
             //
             $table->dropColumn('is_admin');
             $table->dropColumn('status');
+            $table->dropSoftDeletes();
         });
     }
 };
