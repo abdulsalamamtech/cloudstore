@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('order_statuses', function (Blueprint $table) {
             $table->id();
+            $table->enum('order_status', ['pending', 'cancel', 'processing', 'shipped', 'clearing', 'delivered'])->default('pending');
+            $table->boolean('status')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

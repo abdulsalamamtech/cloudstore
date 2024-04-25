@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('shipping_methods', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('provider')->comment('shipping provider | dhl, ups, speedaf');
+            $table->boolean('status')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
