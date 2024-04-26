@@ -15,27 +15,27 @@ class Orders extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo( User::class);
+        return $this->belongsTo( User::class, 'user_id');
     }
 
     public function paymentMethod(): BelongsTo
     {
-        return $this->belongsTo( PaymentMethod::class);
+        return $this->belongsTo( PaymentMethod::class, 'payment_method_id');
     }
 
     public function shippingMethod(): BelongsTo
     {
-        return $this->belongsTo( ShippingMethod::class);
+        return $this->belongsTo( ShippingMethod::class, 'shipping_method_id');
     }
 
     public function orderStatus(): BelongsTo
     {
-        return $this->belongsTo( OrderStatus::class);
+        return $this->belongsTo( OrderStatus::class, 'order_status_id');
     }
 
     public function orderItems(): HasMany
     {
-        return $this->hasMany(OrderItems::class);
+        return $this->hasMany(OrderItems::class, 'order_id');
     }
 
 }

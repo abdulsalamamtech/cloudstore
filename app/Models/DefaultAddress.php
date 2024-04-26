@@ -15,13 +15,13 @@ class DefaultAddress extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo( User::class);
+        return $this->belongsTo( User::class, 'user_id');
     }
 
 
     public function address(): BelongsTo
     {
-        return $this->belongsTo( Address::class);
+        return $this->belongsTo( Address::class, 'address_id');
     }
 
 }

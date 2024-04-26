@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\Orders;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -17,18 +16,18 @@ class OrderItems extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo( User::class);
+        return $this->belongsTo( User::class, 'user_id');
     }
 
-    
+
     public function orders(): BelongsTo
     {
-        return $this->belongsTo( Orders::class);
+        return $this->belongsTo( Orders::class, 'order_id');
     }
 
 
-    public function products(): HasMany
+    public function products(): BelongsTo
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsTo(Product::class, 'product_id');
     }
 }

@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\ProductVariation;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class VariationColors extends Model
 {
     use HasFactory;
 
-    public function productVariation(): BelongsTo
+    public function productVariation(): HasMany
     {
-        return $this->belongsTo(ProductVariation::class);
+        return $this->hasMany(ProductVariation::class, 'variation_color_id');
     }
+
 }

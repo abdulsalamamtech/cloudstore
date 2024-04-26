@@ -14,28 +14,32 @@ class Product extends Model
 
     public function brand(): BelongsTo
     {
-        return $this->belongsTo(Brands::class, 'brand_id', 'id');
+        return $this->belongsTo(Brands::class, 'brand_id');
     }
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Categories::class, 'category_id', 'id');
+        return $this->belongsTo(Categories::class, 'category_id');
     }
 
-
-    public function image(): HasMany
+    public function productVariation(): BelongsTo
     {
-        return $this->hasMany(Image::class, 'image_id', 'id');
+        return $this->belongsTo(ProductVariation::class, 'product_variation_id');
+    }
+
+    public function image(): BelongsTo
+    {
+        return $this->belongsTo(Image::class, 'image_id');
     }
 
     public function productImage(): HasMany
     {
-        return $this->hasMany(ProductImages::class);
+        return $this->hasMany(ProductImages::class, 'product_id');
     }
 
     public function cartItems(): HasMany
     {
-        return $this->hasMany(CartItems::class, 'cart_item_id', 'id');
+        return $this->hasMany(CartItems::class, 'cart_item_id');
     }
 
     public function wishlist(): HasMany
