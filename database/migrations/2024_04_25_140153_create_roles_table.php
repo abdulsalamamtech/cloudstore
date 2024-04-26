@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users','id')->cascadeOnDelete();
-            $table->string('name');
+            $table->enum('name', ['user', 'admin']);
             $table->boolean('status')->default(false);
             $table->softDeletes();
             $table->timestamps();
