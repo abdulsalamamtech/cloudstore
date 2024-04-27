@@ -129,3 +129,21 @@
 ### promotions
     id, name, description, discount_rate, start_date, end_date,
     status, created_at, updated_at
+
+
+
+
+
+## Working with filament
+
+The model name = User, Product
+- (--simple) Manage all your resource on one page
+- (--generate) Generate the the form and table
+- (--soft-delete) Add functionality to restore, force delete and filter trashed records in your resource
+- (--view) Add view page to view resource
+
+```php
+
+   php artisan make:filament-resource User --generate --soft-deletes --view
+
+```
