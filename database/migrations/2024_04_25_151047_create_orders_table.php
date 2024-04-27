@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('transaction_id')->nullable()->unique();
             $table->string('session_id')->unique();
             $table->decimal('total_price', 10, 2);
-            $table->foreignId('payment_method_id')->constrained('payment_method','id')->cascadeOnDelete();
-            $table->foreignId('shipping_method_id')->constrained('shipping_method','id')->cascadeOnDelete();
+            $table->foreignId('payment_method_id')->constrained('payment_methods','id')->cascadeOnDelete();
+            $table->foreignId('shipping_method_id')->constrained('shipping_methods','id')->cascadeOnDelete();
             $table->foreignId('order_status')->constrained('order_statuses','id')->cascadeOnDelete();
             $table->boolean('status')->default(true);
             $table->softDeletes();
