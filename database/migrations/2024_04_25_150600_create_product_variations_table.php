@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('product_variations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('product_id')->constrained('products','id')->cascadeOnDelete();
             $table->foreignId('variation_color_id')->constrained('variation_colors','id')->cascadeOnDelete();
             $table->foreignId('variation_size_is')->constrained('variation_sizes','id')->cascadeOnDelete();
             $table->foreignId('variation_weight_id')->constrained('variation_weights','id')->cascadeOnDelete();

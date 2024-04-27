@@ -21,7 +21,6 @@ return new class extends Migration
             $table->longText('information');
             $table->string('tags');
             $table->foreignId('image_id')->constrained('images','id')->cascadeOnDelete();
-            $table->foreignId('product_variation_id')->constrained('product_variation','id')->cascadeOnDelete();
             $table->boolean('status')->default(true);
             $table->softDeletes();
             $table->timestamps();
