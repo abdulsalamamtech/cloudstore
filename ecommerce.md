@@ -71,14 +71,17 @@
     id, value
     status, created_at, updated_at
 
-### product_variations (sizes: s, l, xl, xxl, color: black, white, blue weight: 10g, 20g)
-    id, variation_size_id, variation_color_id, variation_weight_id
-    status, created_at, updated_at
 
 ### products
     id, name, slug, image_id, sku, price, qty, description, information
-    product_variation_id, tags (product_name, category_name, brand_name)
+    tags (product_name, category_name, brand_name)
     status, created_at, updated_at
+
+
+### product_variations (sizes: s, l, xl, xxl, color: black, white, blue weight: 10g, 20g)
+    id, product_id, variation_size_id, variation_color_id, variation_weight_id
+    status, created_at, updated_at
+
 
 // create its table
 ### product_images
