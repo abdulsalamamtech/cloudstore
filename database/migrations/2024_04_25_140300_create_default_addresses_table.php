@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('default_addresses', function (Blueprint $table) {
+        Schema::create('default_address', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users','id')->cascadeOnDelete();
-            $table->foreignId('address_id')->constrained('address','id')->cascadeOnDelete();
+            $table->foreignId('address_id')->constrained('addresses','id')->cascadeOnDelete();
             $table->boolean('is_default')->default(false);
             $table->boolean('status')->default(false);
             $table->timestamps();
