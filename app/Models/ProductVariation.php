@@ -16,9 +16,9 @@ class ProductVariation extends Model
     use HasFactory;
 
 
-    public function product(): HasMany
+    public function product(): BelongsTo
     {
-        return $this->hasMany( Product::class, 'product_variation_id');
+        return $this->belongsTo( Product::class, 'product_id');
     }
 
     public function variationColors(): BelongsTo
