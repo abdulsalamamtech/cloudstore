@@ -20,6 +20,9 @@
     $table->string('information');
     $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
     $table->foreignId('admin_id')->constrained('users','id')->cascadeOnDelete();
+    // Automatically set foreign id user_id
+    // This has a negative effect when change arise
+    $table->foreignIdFor(User::class);
     // Status for active 1 as default
     $table->tinyInteger('status')->default(1);
     // Or
@@ -136,6 +139,15 @@
 
 ## Working with filament
 
+
+
+Publish configuration files
+```php
+
+    php artisan vendor:publish --tag=filament-config
+
+```
+
 The model name = User, Product
 - (--simple) Manage all your resource on one page
 - (--generate) Generate the the form and table
@@ -147,3 +159,288 @@ The model name = User, Product
    php artisan make:filament-resource User --generate --soft-deletes --view
 
 ```
+
+
+
+
+## Navigation
+
+```php
+
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
+
+    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 2;
+
+    protected static ?string $navigationGroup = 'Shop';
+
+     public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('status', '=', 'processing')->count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::where('status', '=', 'processing')->count() > 10
+            ? 'warning'
+            : 'primary';
+    }
+    
+    
+    // Global Search
+    protected static int $globalSearchResultsLimit = 20;
+    protected static ?string $recordTitleAttribute = 'name';
+    public static function getGloballySearchableAttributes(): array
+    {
+	return ['name', 'slug', 'description'];
+    }
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with(['brand']);
+    }
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Brand' => $record->brand->name,
+            'price' => $record->price,
+        ];
+    }
+    
+    
+    
+```
+
+
+
+## Table
+
+Grouping Table Columns
+
+```php
+
+    public function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('title'),
+                TextColumn::make('slug'),
+                ColumnGroup::make('Visibility', [
+                    TextColumn::make('status'),
+                    IconColumn::make('is_featured'),
+                ]),
+                TextColumn::make('author.name'),
+            ]);
+    }
+
+```
+
+## Form 
+
+Form Components
+
+```php
+
+    Forms\Columns\TextColumn::make('something')
+
+        ->date()
+        ->email()
+        ->image()
+        ->numeric()
+
+        ->sortable()
+        ->required()
+        ->nullable()
+        ->disabled()
+
+        ->searchable()
+        ->default('ORD-' . random_int(100000, 9999999))
+        ->unique(ignoreRecord: true),
+        ->live()
+        ->dehydrated(),
+
+    // Select
+    Forms\Components\Select::make('customer_id')
+        ->relationship('customer', 'name')
+        ->searchable()
+        ->required(),
+    // Select muttiple
+    Forms\Components\Select::make('categories')
+         ->relationship('categories', 'name')
+         ->multiple()
+         ->required(),
+    
+    // Selecting from enum class
+    Forms\Components\Select::make('type')
+        ->options([
+            'pending' => OrderStatusEnum::PENDING->value,
+            'processing' => OrderStatusEnum::PROCESSING->value,
+            'completed' => OrderStatusEnum::COMPLETED->value,
+            'declined' => OrderStatusEnum::DECLINED->value,
+        ])->required(),
+
+    // Input color
+    Forms\Components\ColorPicker::make('primary_hex')
+        ->label('Primary Color')
+
+    // Text area
+    Forms\Components\MarkdownEditor::make('description')
+        ->columnSpan('full')
+
+    // Input radio button
+    Forms\Components\Toggle::make('is_visible')
+        ->label('Visibility')
+        ->helperText('Enable or disable brand visibility')
+        ->default(true),
+
+    // Set dynamic content
+    Forms\Components\Placeholder::make('total_price')
+        ->label('Total Price')
+        ->content(function ($get) {
+            return $get('quantity') * $get('unit_price');
+        })
+    Forms\Components\Select::make('product_id')
+        ->label('Product')
+        ->options(Product::query()->pluck('name', 'id'))
+        ->required()
+        ->reactive()
+        ->afterStateUpdated(fn ($state, Forms\Set $set) =>
+        $set('unit_price', Product::find($state)?->price ?? 0)),
+    // Creating dynamic slug from name
+    // #1
+    // Name
+    Forms\Components\TextInput::make('name')
+        ->required()
+        ->live(onBlur: true)
+        ->unique()
+        ->afterStateUpdated(function(string $operation, $state, Forms\Set $set) {
+            if ($operation !== 'create') {
+                return;
+            }
+
+            $set('slug', Str::slug($state));
+        }),
+    // Slug
+    Forms\Components\TextInput::make('slug')
+        ->disabled()
+        ->dehydrated()
+        ->required()
+        ->unique(),
+    # 2
+    Forms\Components\TextInput::make('name')
+        ->required()
+        ->live(onBlur: true)
+        ->unique()
+        ->afterStateUpdated(function(string $operation, $state, Forms\Set $set) {
+            if ($operation !== 'create') {
+                return;
+            }
+
+            $set('slug', Str::slug($state));
+        }),
+
+    Forms\Components\TextInput::make('slug')
+        ->disabled()
+        ->dehydrated()
+        ->required()
+        ->unique(Product::class, 'slug', ignoreRecord: true),
+
+```
+
+
+Grouping Form Column
+
+```php
+
+return $form
+    ->schema([
+
+        Forms\Components\Group::make()
+        ->schema([
+            Forms\Components\Section::make()
+            ->schema([
+                Forms\Components\TextInput::make('name')
+                    ->required(),
+                Forms\Components\TextInput::make('username')
+                    ->required(),
+            ])->columns(1),
+            Forms\Components\Section::make()
+            ->schema([
+                Forms\Components\FileUpload::make('password')
+                    ->label('Enter password ')
+                    ->required(),
+                Forms\Components\Toggle::make('confirm_password')
+                    ->label('Confirm password')
+                    ->required()
+            ])->columns(1)
+        ]),
+
+        Forms\Components\Group::make()
+        ->schema([
+            Forms\Components\Section::make()
+            ->schema([
+                Forms\Components\TextInput::make('address')
+                    ->required(),
+                Forms\Components\TextInput::make('state')
+                    ->required(),
+            ])->columns(1),
+            Forms\Components\Section::make()
+            ->schema([
+                Forms\Components\TextInput::make('country')
+                    ->label('Country')
+                    ->required(),
+                Forms\Components\TextInput::make('nationality')
+                    ->label('Nationality')
+                    ->required()
+            ])->columns(1)
+        ]),
+    ]);
+
+```
+
+Creating Steps
+
+```php
+
+    // Step 1
+    Forms\Components\Wizard::make([
+        Forms\Components\Wizard\Step::make('Order Details')
+            ->schema([
+                Forms\Components\TextInput::make('number')
+                    ->default('OR-' . random_int(100000, 9999999))
+                    ->disabled()
+                    ->dehydrated()
+                    ->required(),
+
+                Forms\Components\Select::make('type')
+                ->options([
+                    'pending' => OrderStatusEnum::PENDING->value,
+                    'processing' => OrderStatusEnum::PROCESSING->value,
+                    'completed' => OrderStatusEnum::COMPLETED->value,
+                    'declined' => OrderStatusEnum::DECLINED->value,
+                ])->required(),
+
+                Forms\Components\MarkdownEditor::make('notes')
+                    ->columnSpanFull()
+            ])->columns(2),
+        // Step 2
+        Forms\Components\Wizard\Step::make('Order Details')
+            ->schema([
+                Forms\Components\TextInput::make('number')
+                    ->default('OR-' . random_int(100000, 9999999))
+                    ->disabled()
+                    ->dehydrated()
+                    ->required(),
+
+                Forms\Components\Select::make('type')
+                ->options([
+                    'pending' => OrderStatusEnum::PENDING->value,
+                    'processing' => OrderStatusEnum::PROCESSING->value,
+                    'completed' => OrderStatusEnum::COMPLETED->value,
+                    'declined' => OrderStatusEnum::DECLINED->value,
+                ])->required(),
+
+                Forms\Components\MarkdownEditor::make('notes')
+                    ->columnSpanFull()
+            ])->columns(2),
+    ]);
