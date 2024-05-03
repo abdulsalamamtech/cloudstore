@@ -17,10 +17,12 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->integer('qty')->nullable()->default(0);
             $table->decimal('price', 10, 2)->nullable()->default(0);
-            $table->longText('description');
-            $table->longText('information');
-            $table->string('tags');
-            $table->foreignId('image_id')->constrained('images','id')->cascadeOnDelete();
+            $table->longText('description')->nullable();
+            $table->longText('information')->nullable();
+            $table->string('tags')->nullable();
+            $table->foreignId('image_id')->constrained('images','id')->cascadeOnDelete()->nullable();
+            $table->foreignId('brand_id')->constrained('brands','id')->cascadeOnDelete()->nullable();
+            $table->foreignId('category_id')->constrained('categories','id')->cascadeOnDelete()->nullable();
             $table->boolean('status')->default(true);
             $table->softDeletes();
             $table->timestamps();

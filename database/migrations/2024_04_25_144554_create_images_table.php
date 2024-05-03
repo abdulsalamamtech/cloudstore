@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
-            $table->string('file_id');
-            $table->string('url');
-            $table->string('path');
+            $table->string('type')->nullable();
+            $table->string('file_id')->nullable();
+            $table->string('url')->nullable();
+            $table->string('path')->nullable();
             $table->integer('size')->nullable();
-            $table->string('data');
+            $table->string('data')->nullable();
             $table->boolean('status')->default(true);
             $table->softDeletes();
             $table->timestamps();
