@@ -62,15 +62,15 @@
     id, name, image_id, parent_id, 
     status, created_at, updated_at
 
-### variations_sizes (sizes: s, l, xl, xxl)
+### variation_sizes (sizes: s, l, xl, xxl)
     id, value
     status, created_at, updated_at
 
-### variations_colors (color: black, white, blue)
+### variation_colors (color: black, white, blue)
     id, value
     status, created_at, updated_at
 
-### variations_weights (weight: 10g, 100g, 10.5g)
+### variation_weights (weight: 10g, 100g, 10.5g)
     id, value
     status, created_at, updated_at
 
@@ -78,12 +78,22 @@
 ### products
     id, name, slug, image_id, sku, price, qty, description, information
     tags (product_name, category_name, brand_name)
+    brand_id, category_id,
     status, created_at, updated_at
 
 
-### product_variations (sizes: s, l, xl, xxl, color: black, white, blue weight: 10g, 20g)
-    id, product_id, variation_size_id, variation_color_id, variation_weight_id
-    status, created_at, updated_at
+### product_variation_sizes (sizes: s, l, xl, xxl)
+    id, product_id, variation_size_id, 
+    created_at, updated_at
+    
+### product_variation_colors (color: black, white, blue)
+    id, product_id, variation_color_id,
+    created_at, updated_at
+
+### product_variation_weight (weight: 10g, 20g)
+    id, product_id, variation_weight_id,
+     created_at, updated_at
+
 
 
 // create its table
@@ -212,29 +222,6 @@ The model name = User, Product
 ```
 
 
-
-## Table
-
-Grouping Table Columns
-
-```php
-
-    public function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                TextColumn::make('title'),
-                TextColumn::make('slug'),
-                ColumnGroup::make('Visibility', [
-                    TextColumn::make('status'),
-                    IconColumn::make('is_featured'),
-                ]),
-                TextColumn::make('author.name'),
-            ]);
-    }
-
-```
-
 ## Form 
 
 Form Components
@@ -251,20 +238,28 @@ Form Components
         ->sortable()
         ->required()
         ->nullable()
+
+        // disable and dehydrated helps to save the data
         ->disabled()
+        ->dehydrated()
 
         ->searchable()
         ->default('ORD-' . random_int(100000, 9999999))
-        ->unique(ignoreRecord: true),
-        ->live()
+        ->unique(ignoreRecord: true)
+        
+        // trigger request when user is done with the field
+        ->live(onBlur: true)
         ->dehydrated(),
 
     // Select
     Forms\Components\Select::make('customer_id')
         ->relationship('customer', 'name')
         ->searchable()
+        // load first 50 items from relationship
+        ->preload()
         ->required(),
-    // Select muttiple
+
+    // Select multiple
     Forms\Components\Select::make('categories')
          ->relationship('categories', 'name')
          ->multiple()
@@ -444,3 +439,29 @@ Creating Steps
                     ->columnSpanFull()
             ])->columns(2),
     ]);
+    
+    
+    
+    
+    
+## Table
+
+Grouping Table Columns
+
+```php
+
+    public function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('title'),
+                TextColumn::make('slug'),
+                ColumnGroup::make('Visibility', [
+                    TextColumn::make('status'),
+                    IconColumn::make('is_featured'),
+                ]),
+                TextColumn::make('author.name'),
+            ]);
+    }
+
+```
