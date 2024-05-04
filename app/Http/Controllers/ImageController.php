@@ -29,7 +29,17 @@ class ImageController extends Controller
      */
     public function store(StoreImageRequest $request)
     {
-        //
+        $file = $request->file('file');
+        $filePath = $file->store('uploads', 'public');
+
+        // Save file information to database
+        $uploadedFile = Image::create([
+            'path' => $filePath,
+            'name' => $file->getClientOriginalName(),
+        ]);
+
+        return response()->json($uploadedFile);
+
     }
 
     /**
