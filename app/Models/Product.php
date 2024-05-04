@@ -3,14 +3,34 @@
 namespace App\Models;
 
 use App\Models\Categories;
+use App\Models\VariationSizes;
+use App\Models\VariationColors;
+use App\Models\VariationWeights;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+
+    protected $fillable = [
+        "name",
+        "slug",
+        "qty",
+        "price",
+        "description",
+        "information",
+        'tags',
+        'image_id',
+        "brand_id",
+        "category_id",
+        "status",
+    ];
 
     public function brand(): BelongsTo
     {
@@ -22,9 +42,20 @@ class Product extends Model
         return $this->belongsTo(Categories::class, 'category_id');
     }
 
-    public function productVariation(): HasMany
+
+    public function productVariationColors(): BelongsToMany
     {
-        return $this->hasMany(ProductVariation::class, 'product_id');
+        return $this->belongsToMany(VariationColors::class, 'product_variation_colors', 'product_id', 'variation_color_id');
+    }
+
+    public function productVariationSizes(): BelongsToMany
+    {
+        return $this->belongsToMany(VariationSizes::class, 'product_variation_sizes', 'product_id', 'variation_size_id');
+    }
+
+    public function productVariationWeights(): BelongsToMany
+    {
+        return $this->belongsToMany(VariationWeights::class, 'product_variation_weights', 'product_id', 'variation_weight_id');
     }
 
     public function image(): BelongsTo
@@ -32,9 +63,9 @@ class Product extends Model
         return $this->belongsTo(Image::class, 'image_id');
     }
 
-    public function productImage(): HasMany
+    public function productImages(): BelongsToMany
     {
-        return $this->hasMany(ProductImages::class, 'product_id');
+        return $this->belongsToMany(Image::class, 'product_images', 'product_id', 'image_id');
     }
 
     public function cartItems(): HasMany

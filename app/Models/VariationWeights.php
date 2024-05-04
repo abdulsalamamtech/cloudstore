@@ -2,17 +2,23 @@
 
 namespace App\Models;
 
-use App\Models\ProductVariation;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class VariationWeights extends Model
 {
     use HasFactory;
 
-    public function productVariation(): HasMany
+    protected $fillable = [
+        'value',
+        'status',
+    ];
+    
+    public function products(): BelongsToMany
     {
-        return $this->hasMany(ProductVariation::class, 'variation_weight_id');
+        return $this->belongsToMany(Product::class, 'product_variation_weights', 'product_id', 'variation_weight_id');
     }
+
 }
