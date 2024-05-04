@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ImageController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,7 +28,7 @@ require __DIR__.'/auth.php';
 
 // SHOP VISITORS PAGE
 Route::get('/', function () {
-    
+
     // Session::flash('error', 'There was an error');
     // Session::flash('success', 'success');
 
@@ -54,3 +55,7 @@ Route::get('/contact', function () {
     return view('visitors.contact');
 })->name('contact');
 
+
+
+
+Route::get('upload-image', [ImageController::class, 'store'])->name('upload-image');
