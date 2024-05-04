@@ -21,6 +21,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // For filament mass assignment
-        Model::unguard();
+        // if(auth() && auth()->user()){
+            // Model::unguard();
+        // }
+
     }
 }
