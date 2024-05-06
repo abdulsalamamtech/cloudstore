@@ -70,13 +70,10 @@
     id, value
     status, created_at, updated_at
 
-### variation_weights (weight: 10g, 100g, 10.5g)
-    id, value
-    status, created_at, updated_at
-
 
 ### products
-    id, name, slug, image_id, sku, price, qty, description, information
+    id, name, slug, image_id, sku, price, qty, description, information,
+    weight (weight: 10g, 100g, 10.5g)
     tags (product_name, category_name, brand_name)
     brand_id, category_id,
     status, created_at, updated_at
