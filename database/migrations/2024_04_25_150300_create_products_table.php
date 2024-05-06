@@ -20,6 +20,7 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->longText('information')->nullable();
             $table->string('tags')->nullable();
+            $table->integer('weight')->default(10)->nullable();
             $table->foreignId('image_id')->constrained('images','id')->cascadeOnDelete()->nullable();
             $table->foreignId('brand_id')->constrained('brands','id')->cascadeOnDelete()->nullable();
             $table->foreignId('category_id')->constrained('categories','id')->cascadeOnDelete()->nullable();
