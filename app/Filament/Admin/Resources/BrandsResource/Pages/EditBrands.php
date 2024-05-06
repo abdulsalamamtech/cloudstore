@@ -2,9 +2,10 @@
 
 namespace App\Filament\Admin\Resources\BrandsResource\Pages;
 
-use App\Filament\Admin\Resources\BrandsResource;
+use App\Models\Image;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use App\Filament\Admin\Resources\BrandsResource;
 
 class EditBrands extends EditRecord
 {
@@ -18,5 +19,15 @@ class EditBrands extends EditRecord
             Actions\ForceDeleteAction::make(),
             Actions\RestoreAction::make(),
         ];
+    }
+
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        // For brand image
+        $image = Image::find($data['image_id']);
+        $data['path'] = $image->url ?? ($image->path ?? '');
+
+        return $data;
+
     }
 }

@@ -58,7 +58,7 @@ class BrandsResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('image.path')
-                    ->square()
+                    ->circular()
                     ->defaultImageUrl(url('/cloudstore-banner.png')),
                 Tables\Columns\IconColumn::make('status')
                     ->boolean(),
@@ -87,7 +87,7 @@ class BrandsResource extends Resource
                     Tables\Actions\ForceDeleteAction::make(),
                 ])->label('Actions')
                     ->button()
-                    ->color('danger')
+                    ->color('primary')
                     ->link(),
             ])
             ->bulkActions([

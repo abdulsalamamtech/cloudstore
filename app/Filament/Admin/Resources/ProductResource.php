@@ -47,10 +47,18 @@ class ProductResource extends Resource
 
                                 Section::make('Basic Info')
                                     ->schema([
+                                        TextInput::make('in'),
                                         FileUpload::make('path')
+                                            ->getUploadedFileUsing(function (Get $get) {
+                                                // Your custom logic to generate the URL for the uploaded file
+                                                // $set('in', $state);
+                                                return $get('in');
+                                                // return route('your.custom.route', ['file' => $record->getAttribute($attribute)]);
+                                            })
                                             ->label('Product Image')
                                             ->required()
                                             ->image()
+                                            ->downloadable()
                                             ->imageEditor()
                                             ->imageCropAspectRatio('1:1')
                                             ->imageEditorAspectRatios([
@@ -110,7 +118,6 @@ class ProductResource extends Resource
                                         Select::make('brand_id')
                                             ->label('Select Brand')
                                             ->relationship('brand', 'name')
-                                            // ->options(Brands::all()->pluck('name', 'id'))
                                             ->preload()
                                             ->searchable()
                                             ->required(),
@@ -141,23 +148,17 @@ class ProductResource extends Resource
                                             ->preload()
                                             ->createOptionForm([
                                                 TextInput::make('value')
-                                                    ->helperText('s, x, xl, xxl')
-                                                    ->required()
+                                                    ->helperText('S, X, XL, XXL')
+                                    ->required()
                                         ]),
-                                        Select::make('productVariationWeights')
-                                            ->relationship('productVariationWeights', 'value')
+                                        TextInput::make('weight')
+                                            ->label('Product weight')
                                             ->required()
+                                            ->default(10)
+                                            ->minValue(10)
+                                            ->numeric()
                                             ->prefix('gram (g)')
-                                            ->searchable()
-                                            ->preload()
-                                            ->helperText('helps in calculating shipping fee')
-                                            ->createOptionForm([
-                                                TextInput::make('value')
-                                                    ->prefix('gram (g)')
-                                                    ->helperText('Gram(g): 10, 15, 20')
-                                                    ->numeric()
-                                                    ->required(),
-                                            ]),
+                                            ->helperText('helps in calculating shipping fee'),
                                     ])->collapsible(),
                             ])
                     ]),
@@ -203,14 +204,20 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('image.path')
-                    ->square(),
+                    ->circular(),
+                Tables\Columns\ImageColumn::make('productImages.path')
+                    ->circular()
+                    ->stacked()
+                    ->limit(2)
+                    ->limitedRemainingText(),
                 Tables\Columns\TextColumn::make('qty')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('price')
-                    ->money()
+                    ->money('NGN', 1, 'NGN')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tags')
+                Tables\Columns\TextColumn::make('weight')
+                    ->label('weight in gram (g)')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('status')
                     ->boolean(),
@@ -231,11 +238,16 @@ class ProductResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
-                ]),
+                    Tables\Actions\ActionGroup::make([
+                        Tables\Actions\ViewAction::make(),
+                        Tables\Actions\EditAction::make(),
+                        Tables\Actions\DeleteAction::make(),
+                        Tables\Actions\RestoreAction::make(),
+                        Tables\Actions\ForceDeleteAction::make(),
+                    ])->label('Actions')
+                        ->button()
+                        ->color('primary')
+                        ->link(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
