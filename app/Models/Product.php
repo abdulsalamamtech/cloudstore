@@ -53,10 +53,6 @@ class Product extends Model
         return $this->belongsToMany(VariationSizes::class, 'product_variation_sizes', 'product_id', 'variation_size_id');
     }
 
-    public function productVariationWeights(): BelongsToMany
-    {
-        return $this->belongsToMany(VariationWeights::class, 'product_variation_weights', 'product_id', 'variation_weight_id');
-    }
 
     public function image(): BelongsTo
     {
