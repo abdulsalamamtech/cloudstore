@@ -2,11 +2,10 @@
 
 namespace App\Filament\Admin\Resources\ProductResource\Pages;
 
-use App\Models\Image;
 use Filament\Actions;
-use App\Models\Product;
 use Filament\Resources\Pages\ViewRecord;
 use App\Filament\Admin\Resources\ProductResource;
+use App\Filament\Admin\Resources\ProductResource\Pages\GetProductImage;
 
 class ViewProduct extends ViewRecord
 {
@@ -22,15 +21,12 @@ class ViewProduct extends ViewRecord
     protected function mutateFormDataBeforeFill(array $data): array
     {
         // For product image
-        $image = Image::find($data['image_id']);
-        $data['path'] = $image->url ?? ($image->path ?? '');
+        $image = GetProductImage::BannerImage($data['image_id']);
+        $data['path'] = $image;
 
         // For product images
-        $images = Product::find($data['id'])->productImages;
-        foreach($images as $image){
-            $image_path[] =  $image->url ?? ($image->path ?? '');
-        }
-        $data['images'] = $image_path ?? '';
+        $product_images = GetProductImage::Images($data['id']);
+        $data['images'] = $product_images ?? '';
 
         return $data;
 

@@ -4,22 +4,18 @@ namespace App\Filament\Admin\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
-use App\Models\Brands;
 use App\Models\Product;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Forms\Form;
-use App\Models\Categories;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Filament\Resources\Resource;
 use Filament\Actions\ActionGroup;
-use Filament\Support\Colors\Color;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
@@ -47,14 +43,7 @@ class ProductResource extends Resource
 
                                 Section::make('Basic Info')
                                     ->schema([
-                                        TextInput::make('in'),
                                         FileUpload::make('path')
-                                            ->getUploadedFileUsing(function (Get $get) {
-                                                // Your custom logic to generate the URL for the uploaded file
-                                                // $set('in', $state);
-                                                return $get('in');
-                                                // return route('your.custom.route', ['file' => $record->getAttribute($attribute)]);
-                                            })
                                             ->label('Product Image')
                                             ->required()
                                             ->image()

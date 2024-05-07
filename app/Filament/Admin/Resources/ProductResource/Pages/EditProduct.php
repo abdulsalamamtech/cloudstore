@@ -2,11 +2,10 @@
 
 namespace App\Filament\Admin\Resources\ProductResource\Pages;
 
-use App\Models\Product;
 use Filament\Actions;
-use App\Models\Image;
 use Filament\Resources\Pages\EditRecord;
 use App\Filament\Admin\Resources\ProductResource;
+use App\Filament\Admin\Resources\ProductResource\Pages\GetProductImage;
 
 class EditProduct extends EditRecord
 {
@@ -25,19 +24,12 @@ class EditProduct extends EditRecord
     protected function mutateFormDataBeforeFill(array $data): array
     {
         // For product image
-        $image = Image::find($data['image_id'])->url;
-        $data['in'] = $image;
-        // $data['path'] = ($image->url != '') ? $image->url : $image->path;
-        // $img = '<img src="'. $data['path'] .'">';
-        // dd($data['path']);
-        // print($img);
+        $image = GetProductImage::BannerImage($data['image_id']);
+        $data['path'] = $image;
 
         // For product images
-        $images = Product::find($data['id'])->productImages;
-        foreach($images as $image){
-            $image_path[] =  $image->url ?? ($image->path ?? '');
-        }
-        $data['images'] = $image_path ?? '';
+        $product_images = GetProductImage::Images($data['id']);
+        $data['images'] = $product_images ?? '';
 
         return $data;
     }

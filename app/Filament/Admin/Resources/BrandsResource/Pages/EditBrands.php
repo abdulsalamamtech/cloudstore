@@ -23,9 +23,8 @@ class EditBrands extends EditRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        // For brand image
-        $image = Image::find($data['image_id']);
-        $data['path'] = $image->url ?? ($image->path ?? '');
+        // For brand image;
+        $data['path'] = GetBrandImage::Image($data['image_id']);
 
         return $data;
 
